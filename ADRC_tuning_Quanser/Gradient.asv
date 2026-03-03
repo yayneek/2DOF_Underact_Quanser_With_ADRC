@@ -1,0 +1,77 @@
+clear; clc;
+% Loading the data:
+data = load("valid_settings.mat");
+data = data.validSettings;
+IAE = [data.IAE];
+ISE = [data.ISE];
+nB = 100;
+nW = 100;
+
+b_hat = linspace(0,5,nB);
+omega_c = linspace(-5,0,nW);
+
+%Reshaping:
+IAE = reshape(IAE, [nW, nB]);
+ISE = reshape(ISE, [nW, nB]);
+
+dB = b_hat(2) - b_hat(1);
+dW = omega_c(2) - omega_c(1);
+[dISEdB, dISEdW] = gradient(ISE, dB, dW);
+[dIAEdB, dIAEdW] = gradient(IAE, dB, dW);
+
+
+% Calculate the magnitude of the gradients
+magnitudeGradientISE = hypot(dISEdB, dISEdW);
+magnitudeGradientIAE = hypot(dIAEdB, dIAEdW);
+
+
+% Visualizing the magnitude of the gradients
+figure;
+imagesc(b_hat, omega_c, magnitudeGradientISE);
+xlabel('b_{hat}');
+ylabel('omega_c');
+zlabel('Magnitude of Gradient');
+title('ISE Gradient Magnitude Surface');
+colorbar;
+
+figure;
+imagesc(b_hat, omega_c, magnitudeGradientIAE);
+xlabel('b_{hat}');
+ylabel('omega_c');
+zlabel('Magnitude of Gradient');
+title('IAE Gradient Magnitude Surface');
+colorbar;
+
+%% Hessian analysis:
+% Compute the Hessian matrices for IAE and ISE
+% ISE:
+
+[d2ISEd2B, d2ISEdBdW] = gradient(dISEdB, dB, dW);
+[d2ISEdWdB, d2ISEd2W] = gradient(dISEdW, dB, dW);
+ISEHEssian = zeros(100,100);
+
+for i = 1:nB
+    for j =1:nW
+        matrix = [d2ISEd2B(i, j), d2ISEdBdW(i, j); d2ISEdWdB(i, j), d2ISEd2W(i, j)];
+        lambda = eig(matrix);
+        if lambda(1) > 0 && lambda(2) > 0
+            ISEHEssian(i, j) = 1; % Mark positive definiteness
+        elseif lambda(1) < 0 && lambda(2) < 0
+            ISEHEssian(i, j) = -1; % Mark non-positive definiteness
+        else
+            ISEHEssian(i, j) = 0; %Saddle point
+        end
+    end
+end
+
+ISEWopt = log10(1);
+ISEBopt = log10(44306);
+
+figure;
+imagesc(b_hat, omega_c, ISEHEssian);
+set(gca,'YDir','normal');   % <- to "odbija" mapę w pionie
+xlabel('log_{10}(\hat b)', 'Interpreter','latex');
+ylabel('log_{10}(\omega_c)');
+colorbar;
+hold on
+plot(ISEBopt, ISEWopt, 'kp','MarkerSize',14)

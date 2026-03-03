@@ -89,9 +89,6 @@ b_hat = 41874;
 omega_c = 1;
 
 function solution = ID(unknowns, q, v, i, dt, l, L, traj, M, N)
-
-
-
 Q = unknowns(1:15);
 V = unknowns(16:30);
 u = unknowns(31:32);
@@ -158,10 +155,3 @@ traj(:,i+1) - [Q(14);Q(15)]
     end
 
 end
-
-
-
-%% Wykresy
-figure()
-plot(t, u)
-title('')

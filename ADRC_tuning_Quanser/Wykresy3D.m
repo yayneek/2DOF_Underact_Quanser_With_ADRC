@@ -40,7 +40,6 @@ xlabel('$\hat{b}$', 'Interpreter', 'latex', 'FontSize',16);
 ylabel('$\omega_c$', 'Interpreter', 'latex', 'FontSize',16);
 zlabel('ISE', 'Interpreter', 'latex', 'FontSize',16);
 title('$ISE(\omega_c, \hat{b})$', 'Interpreter', 'latex', 'FontSize',16);
-filename = 'X2Y2_ISE.pdf';
 set(gca, 'ColorScale','log');
 clim([1e-5 1e1])
 colorbar;

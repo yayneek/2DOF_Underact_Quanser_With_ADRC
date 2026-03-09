@@ -1,23 +1,35 @@
 clear; clc;
 % Loading the data:
-data = load("ExtendedOmegaRange.mat");
-data = data.validSettings;
-ISE = [data.ISE];
+data32 = load("ExtendedOmegaRange.mat");
+data50 = load("valid_settings.mat");
+
+data50 = data50.validSettings;
+data32 = data32.validSettings;
+
+ISE32 = [data32.ISE];
+ISE50 = [data50.ISE];
+
 nB = 100;
 nW = 100;
 
 % Optimal points:
 ISEWopt = log10(1.9179);
+
 ISEBopt = log10(100000);
 
 b_hat = linspace(0,5,nB);
-omega_c = linspace(-3,2,nW);
+omega_c32 = linspace(-3, 2, nW);
+omega_c50 = linspace(-5, 0, nW);
 
 %Reshaping:
-ISE = reshape(ISE, [nW, nB]);
+ISE32 = reshape(ISE32, [nW, nB]);
+ISE50 = reshape(ISE50, [nW, nB]);
+
 dB = b_hat(2) - b_hat(1);
-dW = omega_c(2) - omega_c(1);
-[dISEdB, dISEdW] = gradient(ISE, dB, dW);
+dW50 = omega_c50(2) - omega_c50(1);
+dW32 = omega_c32(2) - omega_c32(1);
+
+[dISEdB, dISEdW] = gradient(ISE32, dB, dW50);
 
 % Calculate the magnitude of the gradients
 magnitudeGradientISE = hypot(dISEdB, dISEdW);
@@ -26,6 +38,36 @@ magnitudeGradientISE = hypot(dISEdB, dISEdW);
 ISEgradientRatio = abs(dISEdB./dISEdW);
 [~, ix] = min(abs(b_hat - ISEBopt));
 [~, iy] = min(abs(omega_c - ISEWopt));
+
+%% Surface plot:
+% Displaying surface of ISE index:
+
+omega_cTot = [omega_c50, omega_c32(61:end)];
+ISETot = [ISE50; ISE32(61:end, :)];
+
+figure;
+surf(10.^b_hat, 10.^omega_cTot, ISETot);
+xlabel('$log_{10}(\hat{b})$', 'Interpreter','latex','FontSize',16);
+ylabel('$log_{10}(\omega_c)$', 'Interpreter','latex','FontSize',16);
+title('Heatmap of $ISE$ index', 'Interpreter','latex','FontSize',16);
+set(gca, 'ColorScale','log');
+colorbar;
+set(gca, 'XScale', 'log');
+set(gca, 'YScale', 'log');
+set(gca, 'ZScale', 'log');
+clim([1e-5 1e1])
+colorbar
+%% ISE Heatmap:
+figure;
+imagesc(b_hat, omega_cTot, ISETot);
+xlabel('$log_{10}(\hat{b})$', 'Interpreter','latex','FontSize',16);
+ylabel('$log_{10}(\omega_c)$', 'Interpreter','latex','FontSize',16);
+title('Heatmap of $ISE$ index', 'Interpreter','latex','FontSize',16);
+set(gca,'YDir','normal');  
+set(gca, 'ColorScale','log');
+clim([5e-4 1e-2])
+colorbar;
+
 %% Ratios:
 % Visualizing ratios of the gradient components:
 figure;
@@ -38,7 +80,7 @@ set(gca, 'ColorScale','log');
 clim([1e-4 1e1])
 colorbar;
 hold on;
-rectangle('Position',[ISEBopt, ISEWopt, dB/2, dW/2], ...
+rectangle('Position',[ISEBopt, ISEWopt, dB/2, dW50/2], ...
           'EdgeColor','r', 'LineWidth',1);
 
 val = ISEgradientRatio(iy, ix);
@@ -57,7 +99,7 @@ clim([1e-4 1])
 colorbar;
 
 hold on
-rectangle('Position',[ISEBopt, ISEWopt, dB/2, dW/2], ...
+rectangle('Position',[ISEBopt, ISEWopt, dB/2, dW50/2], ...
           'EdgeColor','r', 'LineWidth',2);
 
 val = magnitudeGradientISE(iy, ix);
@@ -99,7 +141,7 @@ set(gca, 'ColorScale','log');
 clim([1e-3 1e3])
 colorbar;
 hold on
-rectangle('Position',[ISEBopt ISEWopt, dB, dW], ...
+rectangle('Position',[ISEBopt ISEWopt, dB, dW50], ...
           'EdgeColor','r', 'LineWidth',1);
 grid on
 

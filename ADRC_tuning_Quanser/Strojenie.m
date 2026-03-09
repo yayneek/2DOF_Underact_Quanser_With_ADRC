@@ -5,10 +5,10 @@ b_hat_range = linspace(0,5,100);
 omega_c_range = linspace(-3,2,100);
 licznik = 0;
 
-%for i = 1:100
+for i = 1:100
     for j = 1:100
         licznik = licznik +1;
-            b_hat = 44306;
+            b_hat = 10^(b_hat_range(i));
             omega_c = 10^(omega_c_range(j));
             out = sim('ADRC_Quanser.slx',10);
             data = out.error_fb_ffw.data';
@@ -21,6 +21,6 @@ licznik = 0;
             validSettings(end).omega_c = omega_c;
             validSettings(end).ISE = ISE;
     end
-%end
+end
 
 save("ExtendedOmegaRange", "validSettings");

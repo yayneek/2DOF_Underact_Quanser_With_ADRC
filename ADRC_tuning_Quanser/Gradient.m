@@ -2,12 +2,18 @@ clear; clc;
 % Loading the data:
 data32 = load("ExtendedOmegaRange.mat");
 data50 = load("valid_settings.mat");
+datab5Plus = load('b_hat5+.mat');
+datab0minus = load("b_hat0-.mat");
 
+datab0minus = datab0minus.validSettings;
+datab5Plus = datab5Plus.validSettings;
 data50 = data50.validSettings;
 data32 = data32.validSettings;
 
 ISE32 = [data32.ISE];
 ISE50 = [data50.ISE];
+ISEb5Plus = [datab5Plus.ISE];
+ISEb05minus = [datab0minus.ISE];
 
 nB = 100;
 nW = 100;
@@ -21,15 +27,19 @@ b_hat = linspace(0,5,nB);
 omega_c32 = linspace(-3, 2, nW);
 omega_c50 = linspace(-5, 0, nW);
 
+dB = b_hat(2) - b_hat(1);
+dW = omega_c50(2) - omega_c50(1);
+b_hat5PlusRange = [5+dB, 5+2*dB, 5+3*dB];
+b_hat0minusRange = [-3*dB, -2*dB, -dB];
+
 %Reshaping:
 ISE32 = reshape(ISE32, [nW, nB]);
 ISE50 = reshape(ISE50, [nW, nB]);
+ISEb5Plus = reshape(ISEb5Plus, [nW, 3]);
+ISEb05minus = reshape(ISEb05minus, [nW, 3]);
 
-dB = b_hat(2) - b_hat(1);
-dW50 = omega_c50(2) - omega_c50(1);
-dW32 = omega_c32(2) - omega_c32(1);
 
-[dISEdB, dISEdW] = gradient(ISE32, dB, dW50);
+[dISEdB, dISEdW] = gradient(ISE32, dB, dW);
 
 % Calculate the magnitude of the gradients
 magnitudeGradientISE = hypot(dISEdB, dISEdW);
@@ -37,7 +47,20 @@ magnitudeGradientISE = hypot(dISEdB, dISEdW);
 % Calcualte 
 ISEgradientRatio = abs(dISEdB./dISEdW);
 [~, ix] = min(abs(b_hat - ISEBopt));
-[~, iy] = min(abs(omega_c - ISEWopt));
+[~, iy] = min(abs(omega_c32 - ISEWopt));
+
+%% Surface plot of extended b range:
+ISETotal = [ISE32, ISEb5Plus];
+b = [b_hat, b_hat5PlusRange];
+figure;
+imagesc(b, omega_c32, ISETotal);
+xlabel('$log_{10}(\hat{b})$', 'Interpreter','latex','FontSize',16);
+ylabel('$log_{10}(\omega_c)$', 'Interpreter','latex','FontSize',16);
+title('Heatmap of $ISE$ index', 'Interpreter','latex','FontSize',16);
+set(gca, 'ColorScale','log');
+set(gca,'YDir','normal');
+clim([1e-5 1e1])
+colorbar
 
 %% Surface plot:
 % Displaying surface of ISE index:
@@ -71,7 +94,7 @@ colorbar;
 %% Ratios:
 % Visualizing ratios of the gradient components:
 figure;
-imagesc(b_hat, omega_c, ISEgradientRatio)
+imagesc(b_hat, omega_cTot, ISEgradientRatio)
 xlabel('$log_{10}(\hat{b})$', 'Interpreter','latex','FontSize',16);
 ylabel('$log_{10}(\omega_c)$', 'Interpreter','latex','FontSize',16);
 title('Heatmap of gradient component ratio for ISE', 'Interpreter','latex','FontSize',16);
@@ -80,16 +103,16 @@ set(gca, 'ColorScale','log');
 clim([1e-4 1e1])
 colorbar;
 hold on;
-rectangle('Position',[ISEBopt, ISEWopt, dB/2, dW50/2], ...
+rectangle('Position',[ISEBopt, ISEWopt, dB/2, dW/2], ...
           'EdgeColor','r', 'LineWidth',1);
 
 val = ISEgradientRatio(iy, ix);
-drawAnnotation(val,ix,iy,b_hat,omega_c,ISEBopt,ISEWopt);
+drawAnnotation(val,ix,iy,b_hat,omega_c32,ISEBopt,ISEWopt);
 grid on
 %% Magnitude:
 % Visualizing the magnitude of the gradients
 figure;
-imagesc(b_hat, omega_c, magnitudeGradientISE);
+imagesc(b_hat, omega_cTot, magnitudeGradientISE);
 xlabel('$log_{10}(\hat{b})$', 'Interpreter','latex','FontSize',16);
 ylabel('$log_{10}(\omega_c)$', 'Interpreter','latex','FontSize',16);
 title('Heatmap of $\left\| \nabla \mathrm{ISE} \right\|$', 'Interpreter','latex','FontSize',16);
@@ -99,11 +122,11 @@ clim([1e-4 1])
 colorbar;
 
 hold on
-rectangle('Position',[ISEBopt, ISEWopt, dB/2, dW50/2], ...
+rectangle('Position',[ISEBopt, ISEWopt, dB/2, dW/2], ...
           'EdgeColor','r', 'LineWidth',2);
 
 val = magnitudeGradientISE(iy, ix);
-drawAnnotation(val,ix,iy,b_hat,omega_c,ISEBopt,ISEWopt);
+drawAnnotation(val,ix,iy,b_hat,omega_cTot,ISEBopt,ISEWopt);
 grid on
 %% Hessian analysis:
 % ISE:
@@ -116,13 +139,6 @@ for i = 1:nB
     for j =1:nW
         matrix = [d2ISEd2B(i, j), d2ISEdBdW(i, j); d2ISEdWdB(i, j), d2ISEd2W(i, j)];
         lambda = eig(matrix);
-        % if lambda(1) > 0 && lambda(2) > 0
-        %     ISEHessian(i, j) = 1; % Mark positive definiteness
-        % elseif lambda(1) < 0 && lambda(2) < 0
-        %     ISEHessian(i, j) = -1; % Mark non-positive definiteness
-        % else
-        %     ISEHessian(i, j) = 0; %Saddle point
-        % end
         LambdaMax = abs(max(lambda));
         LambdaMin = abs(min(lambda));
         ISEHessian(i, j) = LambdaMax/LambdaMin;
@@ -132,7 +148,7 @@ end
 
 
 figure;
-imagesc(b_hat, omega_c, ISEHessian);
+imagesc(b_hat, omega_cTot, ISEHessian);
 set(gca,'YDir','normal');   % <- to "odbija" mapę w pionie
 xlabel('$log_{10}(\hat b)$', 'Interpreter','latex','FontSize',16);
 ylabel('$log_{10}(\omega_c)$', 'Interpreter','latex','FontSize',16);
@@ -141,7 +157,7 @@ set(gca, 'ColorScale','log');
 clim([1e-3 1e3])
 colorbar;
 hold on
-rectangle('Position',[ISEBopt ISEWopt, dB, dW50], ...
+rectangle('Position',[ISEBopt ISEWopt, dB, dW], ...
           'EdgeColor','r', 'LineWidth',1);
 grid on
 

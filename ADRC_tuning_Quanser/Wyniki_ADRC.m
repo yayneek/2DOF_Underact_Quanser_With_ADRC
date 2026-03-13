@@ -52,8 +52,14 @@ legend('FFW+FB','FFW')
 %% Sygnały sterujące
 %u_ffw
 folder = 'C:\Users\Jan Piliszczuk\Desktop\plots';
-figure()
-plot(t, u_ffw)
+hfig = figure;
+pictureWidth = 20;
+hwRatio = 0.65;
+set(findall(hfig, '-property','FontSize'), 'FontSize', 16)
+set(findall(hfig, '-property','Interpreter'), 'Interpreter', 'Latex');
+set(findall(hfig, '-property','TickLabelInterpreter'), 'TickLabelInterpreter', 'Latex')
+set(hfig, 'Units', 'centimeters', 'Position',[3 3 pictureWidth hwRatio*pictureWidth])
+plot(t, u_ffw, 'LineWidth',1.5)
 title('$u_{ff}(t)$', 'Interpreter', 'latex', 'FontSize',16);
 ylabel('$u$[Nm]', 'Interpreter', 'latex', 'FontSize', 16);
 xlabel('$t$[s]', 'Interpreter', 'latex', 'FontSize', 16);
@@ -64,8 +70,14 @@ fullfile_pdf = fullfile(folder, filename);
 exportgraphics(gcf,fullfile_pdf);
 
 %u_fb
-figure()
-plot(t, u_fb)
+hfig = figure;
+pictureWidth = 20;
+hwRatio = 0.65;
+set(findall(hfig, '-property','FontSize'), 'FontSize', 16)
+set(findall(hfig, '-property','Interpreter'), 'Interpreter', 'Latex');
+set(findall(hfig, '-property','TickLabelInterpreter'), 'TickLabelInterpreter', 'Latex')
+set(hfig, 'Units', 'centimeters', 'Position',[3 3 pictureWidth hwRatio*pictureWidth])
+plot(t, u_fb,'LineWidth',1.5)
 title('$u_{fb}(t)$', 'Interpreter', 'latex', 'FontSize',16);
 filename = 'ufb(t).pdf';
 ylabel('$u$[Nm]', 'Interpreter', 'latex', 'FontSize', 16);
@@ -76,8 +88,14 @@ fullfile_pdf = fullfile(folder, filename);
 exportgraphics(gcf,fullfile_pdf);
 
 %u_ffw_fb
-figure()
-plot(t, u_fb+u_ffw)
+hfig = figure;
+pictureWidth = 20;
+hwRatio = 0.65;
+set(findall(hfig, '-property','FontSize'), 'FontSize', 16)
+set(findall(hfig, '-property','Interpreter'), 'Interpreter', 'Latex');
+set(findall(hfig, '-property','TickLabelInterpreter'), 'TickLabelInterpreter', 'Latex')
+set(hfig, 'Units', 'centimeters', 'Position',[3 3 pictureWidth hwRatio*pictureWidth])
+plot(t, u_fb+u_ffw,'LineWidth',1.5)
 title('$u_{ff}(t) + u_{fb}$', 'Interpreter', 'latex', 'FontSize',16);
 filename = 'uffwfb(t).pdf';
 ylabel('$u$[Nm]', 'Interpreter', 'latex', 'FontSize', 16);
@@ -114,11 +132,17 @@ grid on
 %% Uchyby
 
 
-figure();
+hfig = figure;
+pictureWidth = 20;
+hwRatio = 0.65;
+set(findall(hfig, '-property','FontSize'), 'FontSize', 16)
+set(findall(hfig, '-property','Interpreter'), 'Interpreter', 'Latex');
+set(findall(hfig, '-property','TickLabelInterpreter'), 'TickLabelInterpreter', 'Latex')
+set(hfig, 'Units', 'centimeters', 'Position',[3 3 pictureWidth hwRatio*pictureWidth]);
 hold on
 filename = 'e(t)_ffwfb.pdf';
-plot(t, error_fb_ffw(1, :), '-',  'LineWidth', 1);  
-plot(t, error_fb_ffw(2, :), '-', 'LineWidth', 1);
+plot(t, error_fb_ffw(1, :), '-',  'LineWidth', 1.5);  
+plot(t, error_fb_ffw(2, :), '-', 'LineWidth', 1.5);
 grid on
 title('$e(t)$', 'Interpreter', 'latex', 'FontSize', 16);
 ylabel('$e$ [m]', 'Interpreter', 'latex', 'FontSize', 16);
@@ -130,7 +154,13 @@ exportgraphics(gcf,fullfile_pdf);
 
 %%
 
-figure();
+hfig = figure;
+pictureWidth = 20;
+hwRatio = 0.65;
+set(findall(hfig, '-property','FontSize'), 'FontSize', 16)
+set(findall(hfig, '-property','Interpreter'), 'Interpreter', 'Latex');
+set(findall(hfig, '-property','TickLabelInterpreter'), 'TickLabelInterpreter', 'Latex')
+set(hfig, 'Units', 'centimeters', 'Position',[3 3 pictureWidth hwRatio*pictureWidth]);
 hold on;
 
 % --- Właściwe krzywe ---
@@ -191,7 +221,13 @@ for i =1:length(t)
     char(:,i) = R(q(3,i))*r + R(q(6,i))*r; 
 end
 
-figure()
+hfig = figure;
+pictureWidth = 20;
+hwRatio = 0.65;
+set(findall(hfig, '-property','FontSize'), 'FontSize', 16)
+set(findall(hfig, '-property','Interpreter'), 'Interpreter', 'Latex');
+set(findall(hfig, '-property','TickLabelInterpreter'), 'TickLabelInterpreter', 'Latex')
+set(hfig, 'Units', 'centimeters', 'Position',[3 3 pictureWidth hwRatio*pictureWidth]);
 plot(q(14,:),q(15,:), char(1,:), char(2,:))
 title('Location of the load', 'Interpreter', 'latex', 'FontSize', 16);
 xlabel('$x[m]$', 'Interpreter','latex' , 'FontSize', 16);
@@ -203,7 +239,13 @@ fullfile_pdf = fullfile(filename);
 exportgraphics(gcf, fullfile_pdf);
 
 
-figure()
+hfig = figure;
+pictureWidth = 20;
+hwRatio = 0.65;
+set(findall(hfig, '-property','FontSize'), 'FontSize', 16)
+set(findall(hfig, '-property','Interpreter'), 'Interpreter', 'Latex');
+set(findall(hfig, '-property','TickLabelInterpreter'), 'TickLabelInterpreter', 'Latex')
+set(hfig, 'Units', 'centimeters', 'Position',[3 3 pictureWidth hwRatio*pictureWidth]);
 plot(traj(1,:), traj(2,:),q(14,:),q(15,:))
 title('Desired and output trajectories', 'Interpreter', 'latex', 'FontSize', 16);
 xlabel('$x[m]$', 'Interpreter','latex' , 'FontSize', 16);

@@ -110,6 +110,13 @@ Kappa_plot     = Hessian(w_mask, b_mask);
 
 %% 1. Surface plot ISE(b, omega)
 figure;
+hfig = figure;
+pictureWidth = 20;
+hwRatio = 0.65;
+set(findall(hfig, '-property','FontSize'), 'FontSize', 16)
+set(findall(hfig, '-property','Interpreter'), 'Interpreter', 'Latex');
+set(findall(hfig, '-property','TickLabelInterpreter'), 'TickLabelInterpreter', 'Latex')
+set(hfig, 'Units', 'centimeters', 'Position',[3 3 pictureWidth hwRatio*pictureWidth])
 surf(b_plot, w_plot, ISE_plot);
 xlabel('$log_{10}(\hat{b})$', 'Interpreter','latex','FontSize',16);
 ylabel('$log_{10}(\omega_c)$', 'Interpreter','latex','FontSize',16);
@@ -126,6 +133,13 @@ plot3(b_min, omega_c_min, min_ISE, 'rx', ...
 exportgraphics(gcf, 'ISE_surface.pdf', 'ContentType', 'vector');
 %% 2. MagGrad(b, omega)
 figure;
+hfig = figure;
+pictureWidth = 20;
+hwRatio = 0.65;
+set(findall(hfig, '-property','FontSize'), 'FontSize', 16)
+set(findall(hfig, '-property','Interpreter'), 'Interpreter', 'Latex');
+set(findall(hfig, '-property','TickLabelInterpreter'), 'TickLabelInterpreter', 'Latex')
+set(hfig, 'Units', 'centimeters', 'Position',[3 3 pictureWidth hwRatio*pictureWidth])
 imagesc(b_plot, w_plot, MagGrad_plot);
 xlabel('$log_{10}(\hat{b})$', 'Interpreter','latex','FontSize',16);
 ylabel('$log_{10}(\omega_c)$', 'Interpreter','latex','FontSize',16);
@@ -143,6 +157,13 @@ drawAnnotation(MagGrad_plot(row_min, col_min), col_min, row_min, ...
 exportgraphics(gcf, 'MagGrad.pdf', 'ContentType', 'vector');
 %% 3. RatioGrad(b, omega)
 figure;
+hfig = figure;
+pictureWidth = 20;
+hwRatio = 0.65;
+set(findall(hfig, '-property','FontSize'), 'FontSize', 16)
+set(findall(hfig, '-property','Interpreter'), 'Interpreter', 'Latex');
+set(findall(hfig, '-property','TickLabelInterpreter'), 'TickLabelInterpreter', 'Latex')
+set(hfig, 'Units', 'centimeters', 'Position',[3 3 pictureWidth hwRatio*pictureWidth])
 imagesc(b_plot, w_plot, RatioGrad_plot);
 title('$\frac{ISE_{\hat{b}}}{ISE_{\omega_c}}$', 'Interpreter','latex','FontSize',16);
 xlabel('$log_{10}(\hat{b})$', 'Interpreter','latex','FontSize',16);
@@ -160,6 +181,13 @@ drawAnnotation(RatioGrad_plot(row_min, col_min), col_min, row_min, ...
 exportgraphics(gcf, 'RatioGrad.pdf', 'ContentType', 'vector');
 %% 4. Kappa(b, omega)
 figure;
+hfig = figure;
+pictureWidth = 20;
+hwRatio = 0.65;
+set(findall(hfig, '-property','FontSize'), 'FontSize', 16)
+set(findall(hfig, '-property','Interpreter'), 'Interpreter', 'Latex');
+set(findall(hfig, '-property','TickLabelInterpreter'), 'TickLabelInterpreter', 'Latex')
+set(hfig, 'Units', 'centimeters', 'Position',[3 3 pictureWidth hwRatio*pictureWidth])
 imagesc(b_plot, w_plot, Kappa_plot);
 xlabel('$log_{10}(\hat{b})$', 'Interpreter','latex','FontSize',16);
 ylabel('$log_{10}(\omega_c)$', 'Interpreter','latex','FontSize',16);
@@ -180,7 +208,7 @@ function drawAnnotation(val, ix, iy, b_hat, omega_c, xOpt, yOpt, labelText)
 
     % Stała pozycja textboxa względem osi:
     % [x y] w jednostkach normalized osi
-    boxPos = [0.78 0.28];
+    boxPos = [0.68 0.35];
 
     dB = b_hat(2) - b_hat(1);
     dW = omega_c(2) - omega_c(1);

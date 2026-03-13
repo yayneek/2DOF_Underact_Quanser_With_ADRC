@@ -1,5 +1,7 @@
 Inverse_Dynamics;
 %Wykresy3D;
+b_hat = 10^5;
+omega_c = 10^0.3;
 close all;
 out = sim('ADRC_Quanser_final.slx',10);
 
@@ -49,10 +51,10 @@ plot(t, error_fb_ffw, t, error_ffw)
 legend('FFW+FB','FFW')
 %% Sygnały sterujące
 %u_ffw
-folder = 'C:\Users\janek\Desktop\Publikacja\Kod\Wykresy';
+folder = 'C:\Users\Jan Piliszczuk\Desktop\plots';
 figure()
 plot(t, u_ffw)
-title('$u_{ffw}(t)$', 'Interpreter', 'latex', 'FontSize',16);
+title('$u_{ff}(t)$', 'Interpreter', 'latex', 'FontSize',16);
 ylabel('$u$[Nm]', 'Interpreter', 'latex', 'FontSize', 16);
 xlabel('$t$[s]', 'Interpreter', 'latex', 'FontSize', 16);
 filename = 'uffw(t).pdf';
@@ -76,7 +78,7 @@ exportgraphics(gcf,fullfile_pdf);
 %u_ffw_fb
 figure()
 plot(t, u_fb+u_ffw)
-title('$u_{ffw}(t) + u_{fb}$', 'Interpreter', 'latex', 'FontSize',16);
+title('$u_{ff}(t) + u_{fb}$', 'Interpreter', 'latex', 'FontSize',16);
 filename = 'uffwfb(t).pdf';
 ylabel('$u$[Nm]', 'Interpreter', 'latex', 'FontSize', 16);
 xlabel('$t$[s]', 'Interpreter', 'latex', 'FontSize', 16);

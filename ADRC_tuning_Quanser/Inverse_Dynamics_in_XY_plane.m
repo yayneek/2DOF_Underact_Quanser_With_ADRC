@@ -16,6 +16,7 @@ g = 9.81;
 t0 = 0;
 tk = 10;
 t = t0:dt:tk;
+T = length(t);
 
 %Szukane wektory
 q = zeros(15,length(t));
@@ -50,19 +51,28 @@ options = optimset('Display','none', 'TolFun', 1e-10, 'TolX', 1e-7, 'MaxIter', 1
 
 N = 1;
 
+S = [
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]    
+];
+B = zeros(15,2);
+B(3,1) = 1;
+B(12,2) = 1;
+
 for i=1:length(t)-1
 func = @(unknowns)ID(unknowns, q, v, i, dt, l, L, traj, M, N);
-[solution, fval(:,i), exitflag(i)] = fsolve(func, initial_guess, options);
-initial_guess = solution;
+    [solution, fval(:,i), exitflag(i)] = fsolve(func, initial_guess, options);
+    initial_guess = solution;
+    
+    q(:,i+1) = solution(1:15);
+    v(:,i+1) = solution(16:30);
+    u(:,i+1) = solution(31:32);
+    lagrange(:,i+1) = solution(33:end);
+    fvalnorm(i) = norm(fval(:,i));
+    if exitflag(i) < 1
+        break;
+    end
 
-q(:,i+1) = solution(1:15);
-v(:,i+1) = solution(16:30);
-u(:,i+1) = solution(31:32);
-lagrange(:,i+1) = solution(33:end);
-fvalnorm(i) = norm(fval(:,i));
-if exitflag(i) < 1
-    break;
-end
 end
 
 
@@ -81,13 +91,16 @@ output.u = u;
 output.traj = traj;
 save('output.mat',"output");
 
-u1 = u(1,:);
-u2 = u(2,:);
-x_traj = traj(1,:);
-y_traj = traj(2,:);
-b_hat = 41874;
-omega_c = 1;
+%% Sprawdzenie realizacji servo-więzów:
+for i =1:T
+    C = Phiq(q(:,i), l);
+    Y = [S;C] * inv(M) * B;
+    rankY(i) = rank(Y);
+end
 
+plot(rankY')
+
+%%
 function solution = ID(unknowns, q, v, i, dt, l, L, traj, M, N)
 Q = unknowns(1:15);
 V = unknowns(16:30);
@@ -119,7 +132,7 @@ D = Orthogonal_Complement(q(:,i),l);
 solution = [
 Phi(Q,l,L)
 traj(:,i+1) - [Q(14);Q(15)]
-[D'; S*inv(M); C*inv(M)]*(M*((V-v(:,i))/dt) + d - f -B*u + C'*lagrange)
+[D'; S/M; C/(M)]*(M*((V-v(:,i))/dt) + d - f -B*u + C'*lagrange)
 (Q - q(:,i))/dt - V
 ];
 

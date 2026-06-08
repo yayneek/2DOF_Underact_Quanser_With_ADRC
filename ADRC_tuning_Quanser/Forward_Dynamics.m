@@ -146,9 +146,9 @@ legend('$u_1$','$u_2$','Interpreter','latex', 'FontSize',16, 'location','northwe
 ylabel('$u[Nm]$','Interpreter','latex', 'FontSize',16)
 xlabel('$t[s]$','Interpreter','latex', 'FontSize',16)
 
-filename = 'u(t)_';
-fullfile_pdf = fullfile(folder, [append(filename, Case) '.pdf']);
-exportgraphics(gcf, fullfile_pdf);
+% filename = 'u(t)_';
+% fullfile_pdf = fullfile(folder, [append(filename, Case) '.pdf']);
+% exportgraphics(gcf, fullfile_pdf);
 
 
 
@@ -160,9 +160,9 @@ legend('$e_x$','$e_y$','Interpreter','latex', 'FontSize',16, 'location','northwe
 ylabel('$e[m]$','Interpreter','latex', 'FontSize',16)
 xlabel('$t[s]$','Interpreter','latex', 'FontSize',16)
 
-filename = 'e(t)_';
-fullfile_pdf = fullfile(folder, [append(filename, Case) '.pdf']);
-exportgraphics(gcf, fullfile_pdf);
+% filename = 'e(t)_';
+% fullfile_pdf = fullfile(folder, [append(filename, Case) '.pdf']);
+% exportgraphics(gcf, fullfile_pdf);
 
 
 
@@ -173,9 +173,9 @@ title('$\lambda (t) -$ Tension force in the rope','Interpreter','latex', 'FontSi
 ylabel('$\lambda[N]$','Interpreter','latex', 'FontSize',16)
 xlabel('$t[s]$','Interpreter','latex', 'FontSize',16)
 
-filename = 'lag(t)_';
-fullfile_pdf = fullfile(folder, [append(filename, Case) '.pdf']);
-exportgraphics(gcf, fullfile_pdf);
+% filename = 'lag(t)_';
+% fullfile_pdf = fullfile(folder, [append(filename, Case) '.pdf']);
+% exportgraphics(gcf, fullfile_pdf);
 
 
 figure()
@@ -186,9 +186,9 @@ xlabel('$x[m]$','Interpreter','latex', 'FontSize',16)
 ylabel('$y[m]$','Interpreter','latex', 'FontSize',16)
 legend('Load','Characteristic point','Interpreter','latex', 'FontSize',16)
 
-filename = 'XY_';
-fullfile_pdf = fullfile(folder, [append(filename, Case) '.pdf']);
-exportgraphics(gcf, fullfile_pdf);
+% filename = 'XY_';
+% fullfile_pdf = fullfile(folder, [append(filename, Case) '.pdf']);
+% exportgraphics(gcf, fullfile_pdf);
 
 
 figure()
@@ -198,9 +198,9 @@ title('$z(t)$','Interpreter','latex', 'FontSize',16)
 xlabel('$t[s]$','Interpreter','latex', 'FontSize',16)
 ylabel('$z[m]$','Interpreter','latex', 'FontSize',16)
 
-filename = 'z(t)_';
-fullfile_pdf = fullfile(folder, [append(filename, Case) '.pdf']);
-exportgraphics(gcf, fullfile_pdf);
+% filename = 'z(t)_';
+% fullfile_pdf = fullfile(folder, [append(filename, Case) '.pdf']);
+% exportgraphics(gcf, fullfile_pdf);
 
 figure()
 plot(traj(1,:), traj(2,:), q(14,:), q(15,:))
@@ -209,11 +209,11 @@ title('Desired and output trajectories','Interpreter','latex', 'FontSize',16)
 xlabel('$x[m]$','Interpreter','latex', 'FontSize',16)
 ylabel('$y[m]$','Interpreter','latex', 'FontSize',16)
 legend('Desired trajectory','Output of the system','Interpreter','latex', 'FontSize',16)
-
-filename = 'traj_';
-fullfile_pdf = fullfile(folder, [append(filename, Case) '.pdf']);
-exportgraphics(gcf, fullfile_pdf);
+% 
+% filename = 'traj_';
+% fullfile_pdf = fullfile(folder, [append(filename, Case) '.pdf']);
+% exportgraphics(gcf, fullfile_pdf);
 
 %% Animacja 3D
 
-Animacja3d(q,l,L,t,dt,traj);
+% Animacja3d(q,l,L,t,dt,traj);

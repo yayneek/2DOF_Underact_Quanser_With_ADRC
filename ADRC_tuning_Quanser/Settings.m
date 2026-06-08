@@ -1,6 +1,6 @@
 clear; clc;
 %Ustawienia początkowe dla symulacji:
-dt = 0.005;
+dt = 0.001;
 l = 0.127;
 L = l*2;
 m1 = 0.065;

@@ -50,11 +50,6 @@ initial_guess = [q0;v0;u(:,1);lagrange(:,1)];
 options = optimset('Display','none', 'TolFun', 1e-10, 'TolX', 1e-7, 'MaxIter', 10000, 'MaxFunEvals', 50000);
 
 N = 1;
-
-S = [
-[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]
-[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]    
-];
 B = zeros(15,2);
 B(3,1) = 1;
 B(12,2) = 1;
@@ -92,14 +87,40 @@ output.traj = traj;
 save('output.mat',"output");
 
 %% Sprawdzenie realizacji servo-więzów:
+% y = [x_P; x_L]^T:
+
+x_P = l*cos(q(3,:)) + l*cos(q(6,:));
+x_L = q(14,:);
+S = zeros(2, 15);
+S(2, 14) = 1;
+
+
+
 for i =1:T
-    C = Phiq(q(:,i), l);
-    Y = [S;C] * inv(M) * B;
+    S(1, 3) = l*sin(q(3,i));
+    S(1, 6) = l*sin(q(6,i));
+    Y = S * inv(M) * B;
     rankY(i) = rank(Y);
 end
 
+figure;
 plot(rankY')
+title('rank of Y when y = [x_P; x_L]^T')
 
+% y = [x_P; z_L]^T:
+S = zeros(2,15);
+S(2,13) = 1;
+for i =1:T
+    S(1, 3) = l*sin(q(3,i));
+    
+    S(1, 6) = l*sin(q(6,i));
+    Y = S * inv(M) * B;
+    rankY(i) = rank(Y);
+end
+
+figure;
+plot(rankY')
+title('rank of Y when y = y = [x_P; z_L]^T')
 %%
 function solution = ID(unknowns, q, v, i, dt, l, L, traj, M, N)
 Q = unknowns(1:15);
